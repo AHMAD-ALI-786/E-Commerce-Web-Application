@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cart Page | AHMAD ALI</title>
+
+    <link rel="stylesheet" href="base.css" />
+    <link rel="stylesheet" href="Home.css" />
+    <link rel="stylesheet" href="cart.css" />
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header class="header">
+
+        <!-- Header - link home page - Logo -->
+        <a href="index.html">
+            <div class="header-logo">
+                AHMAD <span class="header-logo-text-2">ALI</span>
+            </div>
+        </a>
+        
+    </header>
+
+    <!-- Main -->
+    <main>
+
+        <!-- Main - Toss Notification System -->
+        <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+        <!-- Main - Cart items tabel -->
+        <section class="Order Detail">
+
+            <button class="confirm-btn-tabel">Click to confirm order</button>
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Product Category</th>
+                        <th>Quantity</th>
+                        <th>Unit Price</th>
+                        <th>Amount</th>
+                        <th>Product Picture</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody> </tbody>
+
+                <tfoot>
+                    <tr>
+                        <td colspan="3"></td>
+                        <td>Sub Total</td>
+                        <td id="sub_total"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3"></td>
+                        <td>Discount</td>
+                        <td id="discount"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3"></td>
+                        <td>Total amount</td>
+                        <td id="total"></td>
+                    </tr>
+                </tfoot>
+
+            </table>
+
+        </section>
+
+        <!-- Main - Order Confirm form -->
+        <section class="order-popup hidden">
+
+            <form method="post">
+
+                <div>
+                    <label for="email">Plz enter your Email ID*</label>
+                    <input type="email" id="email" placeholder="786haloworld@gmail.com" required />
+                </div>
+                <div>
+                    <label for="contact">Plz enter your Contact number</label>
+                    <input type="tel" id="contact" placeholder="+92 329 4405542" />
+                </div>
+                <div>
+                    <label for="address">Plz enter your shipping address*</label>
+                    <input type="tel" id="address" placeholder="street# 2, karam nagar, Lahore" required />
+                </div>
+                <div>
+                    <button type="submit" class="confirm-btn">Confirm your order</button>
+                    <button type="button" class="cancel-btn">Cancel</button>
+                </div>
+
+            </form>
+
+        </section>
+
+    </main>
+
+    <script src="cart.js"></script>
+</body>
+
+</html>

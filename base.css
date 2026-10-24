@@ -1,0 +1,194 @@
+/* =============================================================
+   BASE.CSS
+   Shared by every page. Loaded automatically through @import
+   from Home.css and cart.css (so no HTML change is needed).
+
+   1. Theme variables  (change colors / sizes HERE)
+   2. Page reset and default element styles
+   3. Shared utility: .hidden
+   4. Shared component: .toast
+   ============================================================= */
+
+
+/* -------------------------------------------------------------
+   1. THEME VARIABLES
+   ------------------------------------------------------------- */
+:root {
+  /* Brand / primary (buttons, links, important actions) */
+  --color-primary: #0369a1;
+  --color-primary-hover: #075985;
+  --color-primary-soft: #e0f2fe;
+  --color-primary-on-dark: #38bdf8;   /* primary shade used on the dark header */
+
+  /* Header */
+  --color-header-bg: #0f172a;
+  --color-on-dark: #f8fafc;
+
+  /* Neutrals: backgrounds and borders */
+  --color-bg: #f8fafc;
+  --color-surface: #ffffff;
+  --color-surface-alt: #f1f5f9;
+  --color-border: #e2e8f0;
+  --color-border-strong: #cbd5e1;
+
+  /* Neutrals: text */
+  --color-text: #0f172a;
+  --color-text-soft: #334155;
+  --color-text-muted: #64748b;
+
+  /* Status colors */
+  --color-success: #047857;
+  --color-success-soft-hover: #d1fae5;
+  --color-success-soft: #ecfdf5;
+  --color-success-border: #a7f3d0;
+
+  --color-danger: #dc2626;
+  --color-danger-hover: #b91c1c;
+
+  --color-warning: #f59e0b;
+
+  /* Focus ring and modal backdrop */
+  --color-focus-ring: rgba(3, 105, 161, 0.25);
+  --color-overlay: rgba(15, 23, 42, 0.5);
+
+  /* Typography */
+  --font-body: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.8125rem;
+  --fs-base: 0.9375rem;
+  --fs-md: 1.05rem;
+  --fs-lg: 1.25rem;
+  --fs-logo: 1.25rem;
+
+  /* Spacing scale */
+  --space-3xs: 2px;
+  --space-2xs: 4px;
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+
+  /* Shape */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 999px;
+
+  /* Shadows */
+  --shadow-card: 0 1px 3px rgba(15, 23, 42, 0.1), 0 1px 2px rgba(15, 23, 42, 0.06);
+  --shadow-card-hover: 0 10px 24px rgba(15, 23, 42, 0.16);
+  /* Modal: the 100vmax shadow draws the dark backdrop behind the box */
+  --shadow-modal: 0 0 0 100vmax var(--color-overlay), 0 8px 25px rgba(15, 23, 42, 0.15);
+
+  /* Layers */
+  --z-header: 20;
+  --z-modal: 1000;
+  --z-toast: 2000;
+
+  /* Motion */
+  --transition: 0.2s ease;
+
+  /* Header sizing (mobile first, larger values below) */
+  --header-padding: 14px 4%;
+  --cart-icon-size: 24px;
+}
+
+/* Tablet and larger */
+@media (min-width: 640px) {
+  :root {
+    --fs-logo: 1.5rem;
+    --header-padding: 16px 5%;
+    --cart-icon-size: 28px;
+  }
+}
+
+
+/* -------------------------------------------------------------
+   2. RESET AND DEFAULT ELEMENT STYLES
+   ------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--fs-base);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button,
+input,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+ul {
+  list-style: none;
+}
+
+
+/* -------------------------------------------------------------
+   3. UTILITY: .hidden
+   JavaScript adds / removes this class to show or hide elements.
+   !important is used so it always wins over rules such as
+   ".product-form { display: flex }".
+   ------------------------------------------------------------- */
+.hidden {
+  display: none !important;
+}
+
+
+/* -------------------------------------------------------------
+   4. TOAST (notification message)
+   JavaScript adds / removes the .show class.
+   ------------------------------------------------------------- */
+.toast {
+  position: fixed;
+  right: var(--space-md);
+  bottom: var(--space-md);
+  z-index: var(--z-toast);
+
+  max-width: calc(100% - (var(--space-md) * 2));
+  padding: 14px 20px;
+  background-color: var(--color-header-bg);
+  color: var(--color-on-dark);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card-hover);
+
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: var(--transition);
+}
+
+.toast.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}

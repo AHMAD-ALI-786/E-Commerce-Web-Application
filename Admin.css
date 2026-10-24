@@ -1,0 +1,596 @@
+/* =============================================================
+   ADMIN.CSS
+   Used by: Admin.html only.
+   IMPORTANT: Admin.html loads Home.css first (which also loads
+   base.css), then this file. Keep that order.
+
+   Contains: products table, delete popup, orders table,
+   printable bill (invoice).
+
+   Variables, .hidden and .toast live in base.css.
+   ============================================================= */
+
+
+/* -------------------------------------------------------------
+   ADMIN TABLES (Products table + Orders table)
+   Both tables use the same design as the table in cart.html:
+   dark header, same cell padding, same hover. Each one has a FIXED
+   height (--admin-table-height), so the page stays tidy with two
+   tables; extra rows scroll inside the box and the header stays
+   visible.
+   ------------------------------------------------------------- */
+
+:root {
+  --admin-table-height: 380px;
+}
+
+/* Scroll box around each table (vertical + horizontal scrolling).
+   ".products-table-scroll" is not used by the current HTML; it is kept
+   so no selector is removed. */
+.products-table-card,
+.products-table-scroll,
+.order-table-wrap {
+  width: 100%;
+  max-height: var(--admin-table-height);
+  overflow: auto;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-strong) var(--color-bg);
+}
+
+/* Orders box sits inside a card already, so no second shadow */
+.order-table-wrap {
+  box-shadow: none;
+}
+
+/* Scrollbar for Chrome, Edge and Safari */
+.products-table-card::-webkit-scrollbar,
+.products-table-scroll::-webkit-scrollbar,
+.order-table-wrap::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.products-table-card::-webkit-scrollbar-track,
+.products-table-scroll::-webkit-scrollbar-track,
+.order-table-wrap::-webkit-scrollbar-track {
+  background-color: var(--color-bg);
+}
+
+.products-table-card::-webkit-scrollbar-thumb,
+.products-table-scroll::-webkit-scrollbar-thumb,
+.order-table-wrap::-webkit-scrollbar-thumb {
+  background-color: var(--color-border-strong);
+  border-radius: var(--radius-md);
+}
+
+.products-table-card::-webkit-scrollbar-thumb:hover,
+.products-table-scroll::-webkit-scrollbar-thumb:hover,
+.order-table-wrap::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-text-muted);
+}
+
+/* Table (min-width makes the box scroll sideways on small screens) */
+.products-table,
+.order_tabel {
+  width: 100%;
+  border-collapse: separate;   /* needed for the sticky header */
+  border-spacing: 0;
+  text-align: left;
+}
+
+.products-table {
+  min-width: 1000px;
+}
+
+.order_tabel {
+  min-width: 1050px;
+}
+
+/* Table header: dark, stays visible while scrolling down */
+.products-table thead th,
+.order-thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  padding: var(--space-sm) 10px;
+  background-color: var(--color-header-bg);
+  color: var(--color-on-dark);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Sortable headings */
+#current_price_thead,
+#old_price_thead,
+#name_thead {
+  cursor: pointer;
+}
+
+#current_price_thead:hover,
+#old_price_thead:hover,
+#name_thead:hover {
+  background-color: var(--color-primary);
+}
+
+/* Table cells */
+.products-table tbody td,
+.order-tbody td {
+  padding: var(--space-sm) 10px;
+  color: var(--color-text-soft);
+  font-size: var(--fs-sm);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.products-table tbody td {
+  vertical-align: middle;
+}
+
+.order-tbody td {
+  line-height: 1.6;
+  vertical-align: top;
+}
+
+.products-table tbody tr:nth-child(even) {
+  background-color: var(--color-bg);
+}
+
+.products-table tbody tr,
+.order-tbody tr {
+  transition: background-color var(--transition);
+}
+
+.products-table tbody tr:hover,
+.order-tbody tr:hover {
+  background-color: var(--color-surface-alt);
+}
+
+.products-table tbody tr:last-child td,
+.order-tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Actions column (products) */
+.products-table .product-actions {
+  display: table-cell;
+  white-space: nowrap;
+}
+
+/* Edit and delete icons */
+.products-table .edit,
+.products-table .delete {
+  display: inline-block;
+  width: 17px;
+  height: 17px;
+  margin-right: var(--space-sm);
+  vertical-align: middle;
+  cursor: pointer;
+  fill: var(--color-text-muted);
+  transition: fill var(--transition), transform var(--transition);
+}
+
+/* Clicks must reach the svg (JS reads the svg, not the path) */
+.delete path,
+.edit path {
+  pointer-events: none;
+}
+
+.products-table .edit:hover {
+  fill: var(--color-primary);
+  transform: scale(1.12);
+}
+
+.products-table .delete:hover {
+  fill: var(--color-danger);
+  transform: scale(1.12);
+}
+
+
+/* -------------------------------------------------------------
+   DELETE CONFIRMATION POPUP (shown / hidden with .hidden)
+   ------------------------------------------------------------- */
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: var(--z-modal);
+  transform: translate(-50%, -50%);
+
+  width: 90%;
+  max-width: 350px;
+  padding: var(--space-lg);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-modal);
+}
+
+.popup h3 {
+  margin: 0 0 var(--space-lg);
+  font-size: 1.125rem;
+  color: var(--color-text);
+}
+
+.popup-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+}
+
+/* Shared button shape. Colors are set by .cancel-btn / .delete-btn below */
+.popup-buttons button {
+  padding: 9px var(--space-md);
+  border-width: 1px;
+  border-style: solid;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.cancel-btn {
+  background-color: var(--color-surface);
+  border-color: var(--color-border-strong);
+  color: var(--color-text-soft);
+}
+
+.cancel-btn:hover {
+  background-color: var(--color-surface-alt);
+}
+
+.delete-btn {
+  background-color: var(--color-danger);
+  border-color: var(--color-danger);
+  color: var(--color-surface);
+}
+
+.delete-btn:hover {
+  background-color: var(--color-danger-hover);
+  border-color: var(--color-danger-hover);
+}
+
+
+/* -------------------------------------------------------------
+   ORDERS SECTION (card around the orders table)
+   Table, header and cell styles are shared with the products table above.
+   ------------------------------------------------------------- */
+.order-section {
+  margin: var(--space-md);
+  padding: var(--space-md);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+}
+
+.order-section h4 {
+  margin: 0 0 var(--space-md);
+  color: var(--color-text);
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: -0.4px;
+}
+
+/* Customer information (list) */
+.order-tbody ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.order-tbody ul li {
+  margin-bottom: 6px;
+  overflow-wrap: anywhere;
+}
+
+.order-tbody ul li:last-child {
+  margin-bottom: 0;
+}
+
+/* Ordered products (numbered list) */
+.order-tbody ol {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.order-tbody ol li {
+  margin-bottom: var(--space-sm);
+  padding-left: 3px;
+}
+
+.order-tbody ol li:last-child {
+  margin-bottom: 0;
+}
+
+.category {
+  display: inline-block;
+  margin-top: 3px;
+  color: var(--color-text-muted);
+  font-size: var(--fs-xs);
+}
+
+.quantity:not(:empty) {
+  display: inline-block;
+  margin-left: 5px;
+  padding: 1px 7px;
+  color: var(--color-primary);
+  background-color: var(--color-primary-soft);
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+}
+
+.time {
+  color: var(--color-text-muted);
+  font-size: var(--fs-xs);
+}
+
+/* Total amount column */
+.order-tbody td:nth-child(5) {
+  color: var(--color-text);
+  font-size: var(--fs-base);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* Action buttons */
+.order-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-xs);
+  min-width: 110px;
+}
+
+.order-actions button {
+  width: 100%;
+  min-height: 36px;
+  padding: var(--space-xs) var(--space-sm);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color var(--transition), border-color var(--transition),
+    transform var(--transition);
+}
+
+.order-actions button:active {
+  transform: scale(0.98);
+}
+
+.order-actions button:focus-visible {
+  outline: 3px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+/* Print Bill */
+.order-actions .print {
+  color: var(--color-primary);
+  background-color: var(--color-primary-soft);
+  border-color: var(--color-primary-soft);
+}
+
+.order-actions .print:hover {
+  background-color: var(--color-border-strong);
+  border-color: var(--color-border-strong);
+}
+
+/* Order Delivered */
+.order-actions .diliver {
+  color: var(--color-success);
+  background-color: var(--color-success-soft);
+  border-color: var(--color-success-border);
+}
+
+.order-actions .diliver:hover {
+  background-color: var(--color-success-soft-hover);
+}
+
+
+/* -------------------------------------------------------------
+   PRINTABLE BILL (invoice)
+   On screen it is shown / hidden with .hidden.
+   When printing, only .print-bill is visible.
+   ------------------------------------------------------------- */
+.print-bill {
+  width: 100%;
+  max-width: 700px;
+  margin: var(--space-md) auto;
+  padding: var(--space-md);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  font-size: var(--fs-base);
+  border: 1px solid var(--color-border);
+}
+
+.invoice-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-md);
+  padding-bottom: var(--space-md);
+  border-bottom: 2px solid var(--color-text);
+}
+
+.invoice-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.invoice-header h3 {
+  margin: 0;
+  font-size: var(--fs-lg);
+}
+
+.invoice-info {
+  margin: var(--space-lg) 0;
+  text-align: right;
+}
+
+.invoice-info p,
+.customer-info p {
+  margin: 7px 0;
+}
+
+.customer-info {
+  margin-bottom: var(--space-lg);
+}
+
+.customer-info h4 {
+  margin: 0 0 var(--space-sm);
+  font-size: 1rem;
+}
+
+.invoice-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.invoice-table th,
+.invoice-table td {
+  padding: 11px var(--space-xs);
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.invoice-table th {
+  background-color: var(--color-surface-alt);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+}
+
+.invoice-total {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: var(--space-lg);
+  padding-top: var(--space-sm);
+  border-top: 2px solid var(--color-text);
+}
+
+.invoice-total p {
+  margin: 0;
+  font-size: 1.125rem;
+}
+
+.invoice-footer {
+  margin-top: var(--space-xl);
+  padding-top: var(--space-sm);
+  text-align: center;
+  color: var(--color-text-muted);
+  border-top: 1px solid var(--color-border);
+}
+
+/* Print only the invoice */
+@page {
+  size: A4;
+  margin: 15mm;
+}
+
+@media print {
+  body * {
+    visibility: hidden !important;
+  }
+
+  .print-bill,
+  .print-bill * {
+    visibility: visible !important;
+  }
+
+  /* .print-bill.hidden must still print (beats .hidden from base.css) */
+  .print-bill,
+  .print-bill.hidden {
+    display: block !important;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    border: none;
+    color: #000;
+    box-shadow: none;
+  }
+
+  .invoice-table th {
+    background: #eee !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .invoice-table tr {
+    break-inside: avoid;
+  }
+}
+
+
+/* -------------------------------------------------------------
+   RESPONSIVE
+   Mobile first. Uses the same 640px breakpoint as Home.css.
+   ------------------------------------------------------------- */
+
+/* Tablet and larger: 640px and up */
+@media (min-width: 640px) {
+  :root {
+    --admin-table-height: 440px;
+  }
+
+  /* Both tables: bigger header and cells, like the cart table */
+  .products-table thead th,
+  .order-thead th {
+    padding: 15px var(--space-sm);
+    font-size: var(--fs-base);
+  }
+
+  .products-table tbody td,
+  .order-tbody td {
+    padding: 14px var(--space-sm);
+    font-size: var(--fs-base);
+  }
+
+  .products-table .edit,
+  .products-table .delete {
+    width: 19px;
+    height: 19px;
+  }
+
+  /* Orders card */
+  .order-section {
+    margin: var(--space-lg);
+    padding: var(--space-lg);
+    border-radius: var(--radius-lg);
+  }
+
+  .order-section h4 {
+    margin-bottom: 22px;
+    font-size: 1.3rem;
+  }
+
+  .order-actions {
+    min-width: 125px;
+  }
+
+  .order-actions button {
+    min-height: 38px;
+    padding: 9px 13px;
+    font-size: var(--fs-sm);
+  }
+
+  /* Printable bill (screen preview) */
+  .print-bill {
+    margin: 20px auto;
+    padding: 30px;
+  }
+}
+
+/* Respect "reduce motion" system setting */
+@media (prefers-reduced-motion: reduce) {
+  .order-tbody tr,
+  .order-actions button {
+    transition: none;
+  }
+}
