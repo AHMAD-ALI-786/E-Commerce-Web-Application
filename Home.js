@@ -195,7 +195,7 @@ const pr = [
     }
 ];
 
-localStorage.setItem("products", JSON.stringify(pr));
+
 
 
 
@@ -232,7 +232,8 @@ function getProducts() {
   const savedData = localStorage.getItem("products"); // LocalStorage se data liya
 
   if (!savedData) {
-    return [];   // Agar data nahi hai, toh khali array return kar do
+      localStorage.setItem("products", JSON.stringify(pr));
+    return pr;   // Agar data nahi hai, toh khali array return kar do
   }
 
   const parsedData = JSON.parse(savedData); // Data ko parse kiya
@@ -334,7 +335,7 @@ search_bar.addEventListener(
 
     setTimeout(prev);
 
-    setTimeout(() => {
+    prev = setTimeout(() => {
       let query = search_bar.value.trim().toLowerCase();
 
       let search_result = products.filter(
